@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/widgets/comm/uicomm.dart';
+import 'package:vegeshop/widgets/index/store.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new HistoryPageState();
+    return new _HistoryPageState();
   }
 }
 
-class HistoryPageState extends State<HistoryPage> {
+class _HistoryPageState extends State<HistoryPage> {
   bool _loading = true;
   List<HistoryBean> _datas = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadData();
   }
@@ -34,10 +33,10 @@ class HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return _loading
         ? UIComm.loading
         : new ListView.builder(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
             itemCount: _datas.length * 2,
             itemBuilder: _buildRow,
           );
@@ -65,8 +64,27 @@ class HistoryPageState extends State<HistoryPage> {
           : new Text(d.desc, style: new TextStyle(fontSize: 14.0)),
       trailing: new Icon(Icons.arrow_right),
       leading: new Icon(Icons.dashboard),
-      onTap: () => {},
+      onTap: () {
+        _goto(d);
+      },
     );
+  }
+
+  void _goto(HistoryBean d) {
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: true,
+        pageBuilder: (BuildContext context, _, __) {
+          // todo new StorePage(args)
+          return new StorePage(); //new StorePage(arg);
+        },
+        transitionsBuilder: (context, animation, __, child) {
+          return new SlideTransition(
+            position: new Tween<Offset>(
+                    begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .animate(animation),
+            child: child,
+          );
+        }));
   }
 }
 
@@ -75,10 +93,4 @@ class HistoryBean {
   String desc;
 
   HistoryBean(this.name, {this.desc});
-
-//  @override
-//  String toString() {
-//    // TODO: implement toString
-//    return "name:" + name + ",desc" + desc;
-//  }
 }

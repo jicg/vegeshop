@@ -6,7 +6,6 @@ import 'package:vegeshop/widgets/index/tom.dart';
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return new IndexPageState();
   }
 }
@@ -14,7 +13,6 @@ class IndexPage extends StatefulWidget {
 class IndexPageState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return new DefaultTabController(
       length: 2,
       child: new Column(

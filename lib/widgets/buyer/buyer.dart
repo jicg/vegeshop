@@ -4,15 +4,13 @@ import 'package:flutter/widgets.dart';
 class BluyerPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new BluyerPageState();
+    return new _BluyerPageState();
   }
 }
 
-class BluyerPageState extends State<BluyerPage> {
+class _BluyerPageState extends State<BluyerPage> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return new Scaffold(
         appBar: new AppBar(
       title: new Text("你好"),

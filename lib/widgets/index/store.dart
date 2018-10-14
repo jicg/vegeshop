@@ -30,6 +30,10 @@ class StorePageState extends State<StatefulWidget> {
         ),
         itemBuilder: _buildRow);
     return new Scaffold(
+        appBar: new AppBar(
+            automaticallyImplyLeading:true,
+             title: new Text("当前")),
+
         body: loading ? UIComm.loading : grid2,
         floatingActionButton: new FloatingActionButton(
 //            child: new Icon(Icons.save),
@@ -86,8 +90,6 @@ class StorePageState extends State<StatefulWidget> {
     loadData();
   }
 
-
-
   void loadData() {
     Future.wait([getGoods()]).then((resps) {
       if (mounted) {
@@ -103,8 +105,6 @@ class StorePageState extends State<StatefulWidget> {
   }
 }
 
-
-
 class GoodCell extends StatefulWidget {
   final Good good;
   final Color color;
@@ -119,17 +119,15 @@ class GoodCell extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new GoodCellState();
+    return new _GoodCellState();
   }
 }
 
-class GoodCellState extends State<GoodCell> {
-  GoodCellState();
+class _GoodCellState extends State<GoodCell> {
+  _GoodCellState();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return new RaisedButton(
       //alignment: AlignmentDirectional.center,
       color: widget.color,
