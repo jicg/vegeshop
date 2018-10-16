@@ -4,7 +4,7 @@ import 'package:vegeshop/home.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // This widget is the root of your appslication.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: new Color(0xFFEBEBEB),
       ),
       home: new MyHomePage(title: '蔬菜小店'),
 //      routes: {

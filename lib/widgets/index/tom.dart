@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/widgets/index/store.dart';
 
+class TomReadPage extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(
+          "sdfasdf",
+        ),
+        automaticallyImplyLeading: true,
+      ),
+      body: new TomPage(readOnly: true),
+    );
+  }
+}
+
 class TomPage extends StatefulWidget {
+  final bool readOnly;
+
+  TomPage({this.readOnly = false});
+
   @override
   State<StatefulWidget> createState() {
     return new TomPageState();
@@ -17,17 +37,16 @@ class TomPageState extends State<TomPage> {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-        itemCount: 2,
+        itemCount: _datas.length,
         padding: EdgeInsets.symmetric(vertical: 5.0),
         itemBuilder: _buildRow);
   }
 
   Widget _buildRow(context, index) {
-    TomBean d = _datas[index];
+    final TomBean d = _datas[index];
     return new Card(
       child: new ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-//      isThreeLine: true,
         title: new Text(
           d.title,
           style: new TextStyle(fontSize: 18.0),
@@ -41,11 +60,6 @@ class TomPageState extends State<TomPage> {
           _goto(d);
         },
       ),
-//      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-////      isThreeLine: true,
-//      title: new Text(d.title,style:new TextStyle(fontSize: 18.0),),
-//      subtitle: new Text(d.desc, style: new TextStyle(fontSize: 14.0)),
-//      onTap: () => {},
     );
   }
 
@@ -54,7 +68,7 @@ class TomPageState extends State<TomPage> {
         opaque: true,
         pageBuilder: (BuildContext context, _, __) {
           // todo new StorePage(args)
-          return new StorePage(); //new StorePage(arg);
+          return new StorePage(readOnly: widget.readOnly); //new StorePage(arg);
         },
         transitionsBuilder: (context, animation, __, child) {
           return new SlideTransition(

@@ -3,13 +3,17 @@ import 'package:vegeshop/model/good.dart';
 import 'package:vegeshop/widgets/comm//uicomm.dart';
 
 class StorePage extends StatefulWidget {
+  final bool readOnly;
+
+  StorePage({this.readOnly: false});
+
   @override
   State<StatefulWidget> createState() {
     return new StorePageState();
   }
 }
 
-class StorePageState extends State<StatefulWidget> {
+class StorePageState extends State<StorePage> {
   List<Good> _goods = [];
   List<Good> _goodsShow = [];
   List<Good> _goodsSelected = [];
@@ -29,26 +33,27 @@ class StorePageState extends State<StatefulWidget> {
           crossAxisSpacing: 5.0,
         ),
         itemBuilder: _buildRow);
-    return new Scaffold(
-        appBar: new AppBar(
-            automaticallyImplyLeading:true,
-             title: new Text("当前")),
 
+    return new Scaffold(
+        appBar:
+            new AppBar(automaticallyImplyLeading: true, title: new Text("当前")),
         body: loading ? UIComm.loading : grid2,
-        floatingActionButton: new FloatingActionButton(
+        floatingActionButton: widget.readOnly
+            ? null
+            : new FloatingActionButton(
 //            child: new Icon(Icons.save),
-            child: new Text(editable ? "完成" : "修改"),
-            onPressed: () {
-              setState(() {
-                editable = !editable;
-                _goodsShow.clear();
-                if (editable) {
-                  _goodsShow.addAll(_goods);
-                } else {
-                  _goodsShow.addAll(_goodsSelected);
-                }
-              });
-            }));
+                child: new Text(editable ? "完成" : "修改"),
+                onPressed: () {
+                  setState(() {
+                    editable = !editable;
+                    _goodsShow.clear();
+                    if (editable) {
+                      _goodsShow.addAll(_goods);
+                    } else {
+                      _goodsShow.addAll(_goodsSelected);
+                    }
+                  });
+                }));
   }
 
   Widget _buildRow(BuildContext context, int index) {
@@ -95,7 +100,9 @@ class StorePageState extends State<StatefulWidget> {
       if (mounted) {
         setState(() {
           loading = false;
-          _goods = resps[0];
+          if (resps[0] != null && resps[0].length > 0) {
+            _goods = resps[0];
+          }
         });
       }
     }).catchError((e) {

@@ -17,7 +17,13 @@ class DBHelper {
       'CREATE TABLE docitem(id INTEGER PRIMARY KEY, billdate TEXT,good_id int ,order_id int,active int default 0 );';
 
   static Future<Database> _createNewDb() async {
-    Directory documentsDirectory = await getExternalStorageDirectory();
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+//    try {
+//      documentsDirectory=await getExternalStorageDirectory();
+//    }catch(e){
+//      documentsDirectory= await getApplicationDocumentsDirectory();
+//    };
+
     String path = join(documentsDirectory.path, _PATH, _DBNAME);
     Database db;
     if (!await new Directory(dirname(path)).exists()) {
@@ -29,7 +35,7 @@ class DBHelper {
         await db.execute(sql_createTable);
         print("--------create end-------------\n");
       } catch (e) {
-        print("$e");
+        print("数据库异常:$e");
         print("--------create fail -------------\n");
       }
     } else {

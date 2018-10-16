@@ -26,19 +26,26 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     print("initState");
 
-    initPlatformState(
-        [Permission.WriteExternalStorage, Permission.RecordAudio]);
+    initPlatformState(Platform.isIOS
+        ? [Permission.Camera]
+        : [Permission.WriteExternalStorage, Permission.RecordAudio]);
   }
 
   void initPlatformState(List<Permission> ps) async {
     for (Permission p in ps) {
-      final res = await SimplePermissions.requestPermission(p);
-      if (res != PermissionStatus.authorized) {
-        _showDialog();
-        break;
+      try {
+        if (await SimplePermissions.checkPermission(p)) {
+          continue;
+        }
+        final res = await SimplePermissions.requestPermission(p);
+        if (res != PermissionStatus.authorized) {
+          _showDialog();
+          break;
+        }
+      } catch (e) {
+        print("权限请求异常:$e");
       }
     }
-
 
     try {
       var db = await DBHelper.getDB();
@@ -52,14 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _showDialog() {
     showDialog<Null>(
-      context: context,
-      barrierDismissible: false,
-      child: new AlertDialog(
-          content: new Text('是否前去设置未开通权限'),
-          actions: <Widget>[
-            new FlatButton(onPressed: () => exit(0), child: new Text('确定'))
-          ]),
-    );
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+              content: new Text('是否前去设置未开通权限'),
+              actions: <Widget>[
+                new FlatButton(onPressed: () => exit(0), child: new Text('确定'))
+              ]);
+        });
   }
 
   @override
