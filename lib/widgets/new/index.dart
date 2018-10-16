@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class NewPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _NewPageState();
+    return new NewPageState();
   }
 }
 
-class _NewPageState extends State<StatefulWidget> {
-  List<CardBean> _datas = [
-    new CardBean(
+class NewPageState extends State<StatefulWidget> {
+  final List<_CardBean> _datas = [
+    new _CardBean(
         name: "商品资料",
-        icon: new Icon(Icons.account_balance, size: 14.0, color: Colors.white),
+        icon: new Icon(Icons.airport_shuttle, size: 16.0, color: Colors.blue),
         callback: () {}),
-    new CardBean(
-        name: "商品资料",
-        icon: new Icon(Icons.account_balance, size: 14.0, color: Colors.white),
+    new _CardBean(
+        name: "饭店资料",
+        icon: new Icon(Icons.account_balance, size: 16.0, color: Colors.blue),
         callback: () {}),
   ];
 
@@ -29,16 +30,24 @@ class _NewPageState extends State<StatefulWidget> {
           ),
         ),
         body: new ListView(
+          padding: EdgeInsets.symmetric(vertical: 10.0),
           children: <Widget>[
-            new VgCard(
+            new _VgCard(
+                margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0),
                 title: new Container(
                   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.keyboard_arrow_right),
-                      new Text(
-                        "基础建档",
-                        style: new TextStyle(fontSize: 18.0),
+                      new Icon(
+                        Icons.assignment,
+                        size: 16.0,
+                        color: Colors.blue,
+                      ),
+                      new Container(
+                        padding: EdgeInsets.only(left: 3.0),
+                        child: new Text(
+                          "基础建档",
+                        ),
                       )
                     ],
                   ),
@@ -46,8 +55,51 @@ class _NewPageState extends State<StatefulWidget> {
                 itemCount: _datas.length,
                 rowCount: 2,
                 itemBuilder: _buildItem),
+            _about(context),
           ],
         ));
+  }
+
+  Widget _about(BuildContext context) {
+    return new Container(
+      margin: EdgeInsets.only(left: 4.0, right: 4.0, top: 20.0),
+      padding: EdgeInsets.only(left: 48.0, right: 48.0, bottom: 20.0),
+      color: Colors.white,
+      child: new Column(
+        children: <Widget>[
+          new Container(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: new Text("赞助作者",
+                style: new TextStyle(fontSize: 20.0, letterSpacing: 3.0)),
+          ),
+          new Divider(
+            height: 0.0,
+          ),
+//          new Container(
+//              child: new Image.network(
+//                  "https://gitee.com/jicg/easypos/raw/master/snapshot/alipay.png",
+//                  fit: BoxFit.fitWidth)),
+          new SizedBox(
+            height: 240.0,
+            width: 240.0,
+            child: new Swiper(
+              loop: false,
+              itemCount: 2,
+              itemBuilder: (BuildContext context, int index) {
+                return new Image.network(
+                  index.isOdd
+                      ? "https://gitee.com/jicg/easypos/raw/master/snapshot/alipay.png"
+                      : "https://gitee.com/jicg/easypos/raw/master/snapshot/wpay.png",
+                  fit: BoxFit.fitHeight,
+                );
+              },
+              pagination: null,
+              control: null,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildItem(BuildContext context, int index) {
@@ -57,11 +109,8 @@ class _NewPageState extends State<StatefulWidget> {
           child: new Row(
         children: <Widget>[
           new Container(
-              child: new CircleAvatar(
-            radius: 10.0,
             child: _datas[index].icon,
-            backgroundColor: new Color(0xFF63616D),
-          )),
+          ),
           new Container(
             margin: EdgeInsets.only(left: 4.0),
             child: new Text(_datas[index].name,
@@ -73,14 +122,22 @@ class _NewPageState extends State<StatefulWidget> {
   }
 }
 
-class VgCard extends StatelessWidget {
+class _VgCard extends StatelessWidget {
   Widget title;
   int itemCount;
   int rowCount;
+  Widget hdivider;
+  EdgeInsets margin;
 
   IndexedWidgetBuilder itemBuilder;
 
-  VgCard({this.title, this.rowCount = 2, this.itemCount = 0, this.itemBuilder});
+  _VgCard(
+      {this.title,
+      this.rowCount = 2,
+      this.hdivider,
+      this.itemCount = 0,
+      this.margin,
+      this.itemBuilder});
 
   @override
   Widget build(BuildContext context) {
@@ -101,17 +158,15 @@ class VgCard extends StatelessWidget {
       var index = i + 1;
       if (tw != null) {
         bodyws.add(tw);
-        final Widget hdivider = new Container(
-          height: 48.0,
-          width: 1.0,
-          decoration: new BoxDecoration(
-              border: new BorderDirectional(
-                  start: new BorderSide(color: Colors.black12, width: 1.0))),
-        );
-        bodyws.add(hdivider);
+        if (hdivider != null) {
+          bodyws.add(hdivider);
+        }
       }
       if (index % this.rowCount == 0 && bodyws.length > 0) {
-        bodyws.removeLast();
+        if (hdivider != null) {
+          bodyws.removeLast();
+        }
+
         ws.add(new Row(children: bodyws));
         ws.add(new Divider(
           height: 0.0,
@@ -127,17 +182,26 @@ class VgCard extends StatelessWidget {
     }
 
     return new Card(
-        margin: EdgeInsets.all(5.0),
+        margin: margin,
         child: new Column(
           children: ws,
         ));
   }
 }
 
-class CardBean {
+class _CardBean {
   String name;
-  Icon icon;
+  Widget icon;
   VoidCallback callback;
 
-  CardBean({this.name, this.icon, this.callback});
+  _CardBean({this.name, this.icon, this.callback});
 }
+
+//
+//final Widget hdivider = new Container(
+//  height: 48.0,
+//  width: 1.0,
+//  decoration: new BoxDecoration(
+//      border: new BorderDirectional(
+//          start: new BorderSide(color: Colors.black12, width: 1.0))),
+//);
