@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/home.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 //import 'package:splashscreen/splashscreen.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-@override
-Widget build(BuildContext context) {
-  return new MaterialApp(
-    title: '蔬菜小店',
-    theme: new ThemeData(
-      // This is the theme of your application.
-      //
-      // Try running your application with "flutter run". You'll see the
-      // application has a blue toolbar. Then, without quitting the app, try
-      // changing the primarySwatch below to Colors.green and then invoke
-      // "hot reload" (press "r" in the console where you ran "flutter run",
-      // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-      // counter didn't reset back to zero; the application is not restarted.
-      primarySwatch: Colors.blue,
-      scaffoldBackgroundColor: new Color(0xFFEBEBEB),
-    ),
-    home: new MyHomePage(title: '蔬菜小店'),
-//      routes: {
-//        "/home":new StorePage(),
-//      },
-  );
-}
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: '蔬菜小店',
+      localizationsDelegates: [
+        //此处
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('zh', 'CH'),
+//        const Locale('en', 'US'),
+      ],
+      theme: new ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
+        // counter didn't reset back to zero; the application is not restarted.
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: new Color(0xFFEBEBEB),
+      ),
+
+//    routes: <String, WidgetBuilder>{
+//      "/home": (BuildContext context) => new MyHomePage(),
+//    },
+      home: new MyHomePage(title: '蔬菜小店'),
+    );
+  }
 }
 //
 //class MyApp extends StatefulWidget {
@@ -69,4 +81,3 @@ Widget build(BuildContext context) {
 //    );
 //  }
 //}
-

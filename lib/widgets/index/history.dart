@@ -58,27 +58,27 @@ class _HistoryPageState extends State<HistoryPage> {
           trailing: new Icon(Icons.arrow_right),
           leading: new Icon(Icons.dashboard),
           onTap: () {
-            _goto(d);
+            UIComm.goto(context,new TomReadPage());
           }),
     );
   }
 
-  void _goto(HistoryBean d) {
-    Navigator.of(context).push(new PageRouteBuilder(
-        opaque: true,
-        pageBuilder: (BuildContext context, _, __) {
-          // todo new StorePage(args)
-          return new TomReadPage(); //new StorePage(arg);
-        },
-        transitionsBuilder: (context, animation, __, child) {
-          return new SlideTransition(
-            position: new Tween<Offset>(
-                    begin: const Offset(1.0, 0.0), end: Offset.zero)
-                .animate(animation),
-            child: child,
-          );
-        }));
-  }
+//  void _goto(HistoryBean d) {
+//    Navigator.of(context).push(new PageRouteBuilder(
+//        opaque: true,
+//        pageBuilder: (BuildContext context, _, __) {
+//          // todo new StorePage(args)
+//          return new TomReadPage(); //new StorePage(arg);
+//        },
+//        transitionsBuilder: (context, animation, __, child) {
+//          return new SlideTransition(
+//            position: new Tween<Offset>(
+//                    begin: const Offset(1.0, 0.0), end: Offset.zero)
+//                .animate(animation),
+//            child: child,
+//          );
+//        }));
+//  }
 }
 
 class HistoryBean {

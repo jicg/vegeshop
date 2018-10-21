@@ -17,4 +17,7 @@ class _BluyerPageState extends State<BluyerPage> {
       centerTitle: true,
     ));
   }
+
+
+
 }

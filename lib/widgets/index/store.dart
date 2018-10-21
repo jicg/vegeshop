@@ -34,10 +34,12 @@ class StorePageState extends State<StorePage> {
         ),
         itemBuilder: _buildRow);
 
-    return new Scaffold(
+    final Widget body = loading ? UIComm.loading : grid2;
+
+    final Widget page = new Scaffold(
         appBar:
             new AppBar(automaticallyImplyLeading: true, title: new Text("当前")),
-        body: loading ? UIComm.loading : grid2,
+        body: body,
         floatingActionButton: widget.readOnly
             ? null
             : new FloatingActionButton(
@@ -54,6 +56,8 @@ class StorePageState extends State<StorePage> {
                     }
                   });
                 }));
+
+    return page;
   }
 
   Widget _buildRow(BuildContext context, int index) {

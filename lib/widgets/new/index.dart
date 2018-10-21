@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:vegeshop/widgets/comm/uicomm.dart';
+import 'package:vegeshop/widgets/new/customer.dart';
+import 'package:vegeshop/widgets/new/goods.dart';
+
 class NewPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -9,16 +14,26 @@ class NewPage extends StatefulWidget {
 }
 
 class NewPageState extends State<StatefulWidget> {
-  final List<_CardBean> _datas = [
-    new _CardBean(
+  List<_CardBean> _datas = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _datas.add(new _CardBean(
         name: "商品资料",
         icon: new Icon(Icons.airport_shuttle, size: 16.0, color: Colors.blue),
-        callback: () {}),
-    new _CardBean(
+        callback: () {
+          UIComm.goto(context, new GoodManagerPage());
+        }));
+    _datas.add(new _CardBean(
         name: "饭店资料",
         icon: new Icon(Icons.account_balance, size: 16.0, color: Colors.blue),
-        callback: () {}),
-  ];
+        callback: () {
+          UIComm.goto(context, new CustomManagerPage());
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +56,14 @@ class NewPageState extends State<StatefulWidget> {
                       new Icon(
                         Icons.assignment,
                         size: 16.0,
-                        color: Colors.blue,
+                        color: Colors.grey,
                       ),
                       new Container(
                         padding: EdgeInsets.only(left: 3.0),
                         child: new Text(
                           "基础建档",
+                          style: new TextStyle(
+                              color: Colors.grey, fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
@@ -61,6 +78,14 @@ class NewPageState extends State<StatefulWidget> {
   }
 
   Widget _about(BuildContext context) {
+//    final flutterWebviewPlugin = new FlutterWebviewPlugin();
+//    WebviewScaffold
+//    flutterWebviewPlugin.launch("fasdf",
+//        rect: new Rect.fromLTWH(
+//            0.0,
+//            0.0,
+//            MediaQuery.of(context).size.width,
+//            300.0));
     return new Container(
       margin: EdgeInsets.only(left: 4.0, right: 4.0, top: 20.0),
       padding: EdgeInsets.only(left: 48.0, right: 48.0, bottom: 20.0),
@@ -69,7 +94,7 @@ class NewPageState extends State<StatefulWidget> {
         children: <Widget>[
           new Container(
             padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: new Text("赞助作者",
+            child: new Text("广告",
                 style: new TextStyle(fontSize: 20.0, letterSpacing: 3.0)),
           ),
           new Divider(
@@ -104,20 +129,22 @@ class NewPageState extends State<StatefulWidget> {
 
   Widget _buildItem(BuildContext context, int index) {
     return new FlatButton(
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
       onPressed: _datas[index].callback,
       child: new Container(
+          padding: EdgeInsets.symmetric(vertical: 15.0),
           child: new Row(
-        children: <Widget>[
-          new Container(
-            child: _datas[index].icon,
-          ),
-          new Container(
-            margin: EdgeInsets.only(left: 4.0),
-            child: new Text(_datas[index].name,
-                style: new TextStyle(color: Colors.black, fontSize: 14.0)),
-          )
-        ],
-      )),
+            children: <Widget>[
+              new Container(
+                child: _datas[index].icon,
+              ),
+              new Container(
+                margin: EdgeInsets.only(left: 4.0),
+                child: new Text(_datas[index].name,
+                    style: new TextStyle(color: Colors.black, fontSize: 14.0)),
+              )
+            ],
+          )),
     );
   }
 }
