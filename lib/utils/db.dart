@@ -11,10 +11,12 @@ class DBHelper {
 
   static const String _DBNAME = "vegeshop.db";
 
-  static const String sql_createTable =
-      'CREATE TABLE good (id INTEGER PRIMARY KEY,name TEXT,active int default 0);'
-      'CREATE TABLE doc(id INTEGER PRIMARY KEY, billdate TEXT);'
-      'CREATE TABLE docitem(id INTEGER PRIMARY KEY, billdate TEXT,good_id int ,order_id int,active int default 0 );';
+  static const List<String> sql_createTables = [
+    'CREATE TABLE good (id INTEGER PRIMARY KEY,name TEXT,active int default 0);',
+    'CREATE TABLE customer (id INTEGER PRIMARY KEY,name TEXT,remark TEXT);',
+    'CREATE TABLE doc (id INTEGER PRIMARY KEY, billdate TEXT);',
+    'CREATE TABLE docitem (id INTEGER PRIMARY KEY, billdate TEXT,good_id int ,order_id int,active int default 0 );',
+  ];
 
   static Future<Database> _createNewDb() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -31,8 +33,10 @@ class DBHelper {
         print("--------create start-------------\n");
         await new Directory(dirname(path)).create(recursive: true);
         db = await openDatabase(path);
-        print(sql_createTable + "\n");
-        await db.execute(sql_createTable);
+        for (int i = 0; i < sql_createTables.length; i++) {
+          print(sql_createTables[i]);
+          await db.execute(sql_createTables[i]);
+        }
         print("--------create end-------------\n");
       } catch (e) {
         print("数据库异常:$e");
@@ -50,6 +54,10 @@ class DBHelper {
 
   static Future<Database> getDB() async {
     return await _createNewDb();
+  }
+
+  static Future<int> firstIntValue(Database db, String sql, List args) async {
+    return Sqflite.firstIntValue(await db.rawQuery(sql, args));
   }
 
   static Future<int> addGood(Good good) async {

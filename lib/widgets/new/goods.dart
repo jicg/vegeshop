@@ -89,7 +89,7 @@ class _GoodManagerState extends State<GoodManagerPage> {
           table.goodsSel.length == 0 ? "请选择要修改的商品" : "只能选择一个要修改的商品！");
       return;
     }
-    UIComm.goto(context, new SingleGoodPage(table.goodsSel[0])).then((value) {
+    UIComm.goto(context, new SingleGoodPage(good:table.goodsSel[0])).then((value) {
       if (value != null) {
         addsysn(value);
       }
@@ -98,7 +98,7 @@ class _GoodManagerState extends State<GoodManagerPage> {
 
 //新增
   void add(BuildContext context) {
-    UIComm.goto(context, new SingleGoodPage(null)).then((value) {
+    UIComm.goto(context, new SingleGoodPage(good:new Good(name: ""))).then((value) {
       if (value != null) {
         addsysn(value);
       }

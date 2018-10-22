@@ -44,3 +44,5 @@ Future<int> addGood(Good good) async {
 Future<bool> delGoods(List<Good> goods) async {
   return await DBHelper.delGoods(goods);
 }
+
+

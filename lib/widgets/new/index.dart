@@ -150,15 +150,15 @@ class NewPageState extends State<StatefulWidget> {
 }
 
 class _VgCard extends StatelessWidget {
-  Widget title;
-  int itemCount;
-  int rowCount;
-  Widget hdivider;
-  EdgeInsets margin;
+  final Widget title;
+  final int itemCount;
+  final int rowCount;
+  final Widget hdivider;
+  final EdgeInsets margin;
 
-  IndexedWidgetBuilder itemBuilder;
+  final IndexedWidgetBuilder itemBuilder;
 
-  _VgCard(
+  const _VgCard(
       {this.title,
       this.rowCount = 2,
       this.hdivider,

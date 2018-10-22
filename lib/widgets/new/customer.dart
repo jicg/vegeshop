@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vegeshop/model/customer.dart';
 import 'package:vegeshop/widgets/comm/uicomm.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:vegeshop/widgets/new/singlecustomer.dart';
 
 class CustomManagerPage extends StatefulWidget {
   @override
@@ -24,7 +25,9 @@ class CustomManagerState extends State<CustomManagerPage> {
           title: new Text("客户管理"),
           actions: <Widget>[
             new FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  add(context);
+                },
                 child: new Icon(
                   Icons.add,
                   color: Colors.white,
@@ -58,26 +61,31 @@ class CustomManagerState extends State<CustomManagerPage> {
     var c = _customers[index];
     return new Slidable(
       secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: '编辑',
-          color: Colors.greenAccent,
-          icon: Icons.edit,
-          onTap: () {
-            UIComm.showInfo("编辑 ${c.name}");
-          },
-        ),
+//        IconSlideAction(
+//          caption: '编辑',
+//          color: Colors.greenAccent,
+//          icon: Icons.edit,
+//          onTap: () {
+//            //UIComm.showInfo("编辑 ${c.name}");
+//            edit(context, c);
+//          },
+//        ),
         IconSlideAction(
           caption: '删除',
           color: Colors.red,
           icon: Icons.delete,
           onTap: () {
-            UIComm.showInfo("删除 ${c.name}");
+            del(context, c);
+            //UIComm.showInfo("删除 ${c.name}");
           },
         ),
       ],
       child: new ListTile(
         title: new Text("${c.name}"),
         subtitle: new Text("${c.desc}"),
+        onTap: () {
+          edit(context, c);
+        },
       ),
       delegate: new SlidableScrollDelegate(),
     );
@@ -91,6 +99,82 @@ class CustomManagerState extends State<CustomManagerPage> {
 
     setState(() {
       loading = false;
+    });
+  }
+
+  void del(BuildContext context, Customer c) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text("删除"),
+            content: new Text(
+              "确定删除？删除后将无法恢复！",
+              style: new TextStyle(color: Colors.red),
+            ),
+            actions: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: new Text("取消"),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: new Text("确定"),
+              )
+            ],
+          );
+        }).then((value) {
+      print(value);
+      if (value != null && value) {
+//        UIComm.showInfo("删除成功！");
+        delsysn(c);
+      }
+    });
+  }
+
+  void delsysn(Customer c) async {
+    bool flag = await delCustomers([c]);
+    if (flag) {
+      UIComm.showInfo("删除成功！");
+      setState(() {
+        _customers.remove(c);
+      });
+    }
+  }
+
+  void edit(BuildContext context, Customer c) {
+    UIComm.goto(context, new SingleCustomerPage(customer: c)).then((value) {
+      if (value != null) {
+        savesysn(value);
+      }
+    });
+  }
+
+  void add(BuildContext context) {
+    UIComm.goto(context, new SingleCustomerPage(customer: new Customer()))
+        .then((value) {
+      if (value != null) {
+        savesysn(value);
+      }
+    });
+  }
+
+  void savesysn(Customer value) async {
+    print(value.toString());
+    int id = await saveCustomer(value);
+    UIComm.showInfo(value.id == -1 ? "新增成功！" : "修改成功！");
+    if (value.id == -1) {
+      value.id = id;
+    }
+
+    setState(() {
+      if (!_customers.contains(value)) {
+        _customers.add(value);
+      }
     });
   }
 }

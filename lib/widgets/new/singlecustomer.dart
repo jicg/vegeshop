@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:vegeshop/model/good.dart';
+import 'package:vegeshop/model/customer.dart';
 
-class SingleGoodPage extends StatefulWidget {
-  final Good good;
+class SingleCustomerPage extends StatefulWidget {
+  final Customer customer;
 
-  const SingleGoodPage({Key key, this.good}) : super(key: key);
-
-
+  const SingleCustomerPage({Key key, this.customer}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new SingleGoodState();
+    return new SingleCustomerState();
   }
 }
 
-class SingleGoodState extends State<SingleGoodPage> {
+class SingleCustomerState extends State<SingleCustomerPage> {
   TextEditingController _nameController;
+  TextEditingController _descController;
 
-  bool _active;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.good.id == null || widget.good.id < 0) {
-      widget.good.id = -1;
+    if (widget.customer.id == null || widget.customer.id < 0) {
+      widget.customer.id = -1;
     }
-    _nameController = new TextEditingController(text: widget.good.name);
-    _active = widget.good.active;
+    _nameController = new TextEditingController(text: widget.customer.name);
+    _descController = new TextEditingController(text: widget.customer.desc);
   }
 
   @override
@@ -35,7 +33,7 @@ class SingleGoodState extends State<SingleGoodPage> {
     // TODO: implement build
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget.good.id == -1 ? "新增" : "修改"),
+        title: new Text(widget.customer.id == -1 ? "新增" : "修改"),
       ),
       body: new Card(
         child: new Container(
@@ -45,13 +43,12 @@ class SingleGoodState extends State<SingleGoodPage> {
               new Row(
                 children: <Widget>[
                   new Container(
-                    width: 80.0,
-                    child: new Text("商品名称"),
+                    width: 40.0,
+                    child: new Text("名称"),
                   ),
                   new Expanded(
                       flex: 1,
                       child: new Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: new TextField(
                           autofocus: true,
                           controller: _nameController,
@@ -64,22 +61,22 @@ class SingleGoodState extends State<SingleGoodPage> {
               ),
               new Divider(),
               new Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   new Container(
-                    width: 80.0,
-                    child: new Text("是否可用"),
+                    margin: EdgeInsets.only(top: 10.0),
+                    width: 40.0,
+                    child: new Text("描述"),
                   ),
                   new Expanded(
                       flex: 1,
                       child: new Container(
-                        alignment: Alignment.centerLeft,
-                        child: new Switch(
-                            value: _active,
-                            onChanged: (val) {
-                              setState(() {
-                                _active = val;
-                              });
-                            }),
+                        child: new TextField(
+                          controller: _descController,
+                          maxLines: 4,
+                          decoration:
+                              new InputDecoration(border: InputBorder.none),
+                        ),
                       )),
                   //new EditableText()
                 ],
@@ -112,7 +109,7 @@ class SingleGoodState extends State<SingleGoodPage> {
                       },
                       color: Colors.blue,
                       child: new Text(
-                        widget.good.id == -1 ? "新增" : "保存",
+                        widget.customer.id == -1 ? "新增" : "保存",
 //                        style:
 //                            new TextStyle(color: Colors.white, fontSize: 12.0),
                       ),
@@ -129,11 +126,11 @@ class SingleGoodState extends State<SingleGoodPage> {
   }
 
   void _save(BuildContext context) {
-    widget.good
-      ..id = widget.good.id == -1 ? -1 : widget.good.id
-      ..active = _active
+    widget.customer
+      ..id = widget.customer.id == -1 ? -1 : widget.customer.id
+      ..desc = _descController.value.text
       ..name = _nameController.value.text;
 
-    Navigator.pop(context, widget.good);
+    Navigator.pop(context, widget.customer);
   }
 }
