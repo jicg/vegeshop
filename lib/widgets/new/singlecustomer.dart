@@ -35,90 +35,92 @@ class SingleCustomerState extends State<SingleCustomerPage> {
       appBar: new AppBar(
         title: new Text(widget.customer.id == -1 ? "新增" : "修改"),
       ),
-      body: new Card(
-        child: new Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: new Column(
-            children: <Widget>[
-              new Row(
-                children: <Widget>[
-                  new Container(
-                    width: 40.0,
-                    child: new Text("名称"),
-                  ),
-                  new Expanded(
-                      flex: 1,
-                      child: new Container(
-                        child: new TextField(
-                          autofocus: true,
-                          controller: _nameController,
-                          decoration:
-                              new InputDecoration(border: InputBorder.none),
-                        ),
-                      )),
-                  //new EditableText()
-                ],
-              ),
-              new Divider(),
-              new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Container(
-                    margin: EdgeInsets.only(top: 10.0),
-                    width: 40.0,
-                    child: new Text("描述"),
-                  ),
-                  new Expanded(
-                      flex: 1,
-                      child: new Container(
-                        child: new TextField(
-                          controller: _descController,
-                          maxLines: 4,
-                          decoration:
-                              new InputDecoration(border: InputBorder.none),
-                        ),
-                      )),
-                  //new EditableText()
-                ],
-              ),
-              new Divider(),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  new Container(
-                    margin: EdgeInsets.all(10.0),
-                    child: new RaisedButton(
-                      padding: EdgeInsets.all(10.0),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: new Text(
-                        "取消",
+      body: new SingleChildScrollView(
+        child: new Card(
+          child: new Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: new Column(
+              children: <Widget>[
+                new Row(
+                  children: <Widget>[
+                    new Container(
+                      width: 40.0,
+                      child: new Text("名称"),
+                    ),
+                    new Expanded(
+                        flex: 1,
+                        child: new Container(
+                          child: new TextField(
+                            autofocus: true,
+                            controller: _nameController,
+                            decoration:
+                                new InputDecoration(border: InputBorder.none),
+                          ),
+                        )),
+                    //new EditableText()
+                  ],
+                ),
+                new Divider(),
+                new Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Container(
+                      margin: EdgeInsets.only(top: 12.0),
+                      width: 40.0,
+                      child: new Text("描述"),
+                    ),
+                    new Expanded(
+                        flex: 1,
+                        child: new Container(
+                          child: new TextField(
+                            controller: _descController,
+                            maxLines: 4,
+                            decoration:
+                                new InputDecoration(border: InputBorder.none),
+                          ),
+                        )),
+                    //new EditableText()
+                  ],
+                ),
+                new Divider(),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    new Container(
+                      margin: EdgeInsets.all(10.0),
+                      child: new RaisedButton(
+                        padding: EdgeInsets.all(10.0),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: new Text(
+                          "取消",
 //                        style: new TextStyle(fontSize: 12.0),
+                        ),
                       ),
                     ),
-                  ),
-                  new Container(
-                    margin: EdgeInsets.all(10.0),
-                    child: new RaisedButton(
-                      padding: EdgeInsets.all(10.0),
-                      onPressed: () {
-                        //todo
+                    new Container(
+                      margin: EdgeInsets.all(10.0),
+                      child: new RaisedButton(
+                        padding: EdgeInsets.all(10.0),
+                        onPressed: () {
+                          //todo
 //                        Navigator.pop(context);
-                        _save(context);
-                      },
-                      color: Colors.blue,
-                      child: new Text(
-                        widget.customer.id == -1 ? "新增" : "保存",
+                          _save(context);
+                        },
+                        color: Colors.blue,
+                        child: new Text(
+                          widget.customer.id == -1 ? "新增" : "保存",
 //                        style:
 //                            new TextStyle(color: Colors.white, fontSize: 12.0),
+                        ),
                       ),
                     ),
-                  ),
-                  //new EditableText()
-                ],
-              )
-            ],
+                    //new EditableText()
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

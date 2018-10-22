@@ -63,7 +63,7 @@ class DBHelper {
   static Future<int> addGood(Good good) async {
     var db = await getDB();
     int id = Sqflite.firstIntValue(
-        await db.rawQuery("select id from good where name = '${good.name}'"));
+        await db.rawQuery("select id from good where id = '${good.id}'"));
     if (id != null && id > 0) {
       String sql = "update good set name=?, active=? where id = ?";
       await db.transaction((txn) async {

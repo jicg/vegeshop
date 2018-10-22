@@ -27,7 +27,7 @@ Future<List<Customer>> getCustomers() async {
 Future<int> saveCustomer(Customer customer) async {
   var db = await DBHelper.getDB();
   int id = await DBHelper.firstIntValue(
-      db, "select id from customer where name = ?", [customer.name]);
+      db, "select id from customer where id = ?", [customer.id]);
   if (id != null && id > 0) {
     String sql = "update customer set name=?, remark=? where id = ?";
     await db.transaction((txn) async {

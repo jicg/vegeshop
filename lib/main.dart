@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 //        const Locale('en', 'US'),
       ],
       theme: new ThemeData(
+        fontFamily: "SimSun",
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
