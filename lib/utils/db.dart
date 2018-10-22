@@ -55,20 +55,20 @@ class DBHelper {
   static Future<int> addGood(Good good) async {
     var db = await getDB();
     int id = Sqflite.firstIntValue(
-        await db.rawQuery("select id from good where name = '$good.name'"));
-    if (id > 0) {
-      String sql = "update good set active=? where id = ?";
+        await db.rawQuery("select id from good where name = '${good.name}'"));
+    if (id != null && id > 0) {
+      String sql = "update good set name=?, active=? where id = ?";
       await db.transaction((txn) async {
-        await txn.rawUpdate(sql, ['0', '$id']);
+        await txn.rawUpdate(sql, ['${good.name}', '0', '$id']);
       });
     } else {
-      String sql = "INSERT INTO good(name,active) VALUES('$good.name',0)";
+      String sql = "INSERT INTO good(name,active) VALUES('${good.name}',0)";
       await db.transaction((txn) async {
         id = await txn.rawInsert(sql);
       });
     }
     await db.close();
-    return id;
+    return id == null ? -1 : id;
   }
 
   static Future<List<Good>> getGoods() async {
@@ -84,5 +84,19 @@ class DBHelper {
     }
     await db.close();
     return goods;
+  }
+
+  static Future<bool> delGoods(List<Good> goods) async {
+//    List<int> ids = [];
+    var flag = false;
+    var db = await getDB();
+    await db.transaction((txn) async {
+      for (int i = 0; i < goods.length; i++) {
+        await txn.delete("good", where: "id = ? ", whereArgs: [goods[i].id]);
+      }
+    });
+    await db.close();
+    flag = true;
+    return flag;
   }
 }

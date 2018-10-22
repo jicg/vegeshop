@@ -17,7 +17,7 @@ class SatateGoodState extends State<SingleGoodPage> {
   TextEditingController _nameController = null;
   bool _active;
 
-  SatateGoodState() ;
+  SatateGoodState();
 
   @override
   void initState() {
@@ -137,9 +137,10 @@ class SatateGoodState extends State<SingleGoodPage> {
 
   void _save(BuildContext context) {
     widget.good
-      ..id = widget.good.id == -1 ? 1 : widget.good.id
+      ..id = widget.good.id == -1 ? -1 : widget.good.id
       ..active = _active
       ..name = _nameController.value.text;
+
     Navigator.pop(context, widget.good);
   }
 }

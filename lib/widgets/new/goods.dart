@@ -42,6 +42,7 @@ class _GoodManagerState extends State<GoodManagerPage> {
     });
   }
 
+  //删除
   void del(BuildContext context) {
     if (table.goodsSel.length == 0) {
       UIComm.showError("请选择要删除的商品！");
@@ -75,34 +76,54 @@ class _GoodManagerState extends State<GoodManagerPage> {
         }).then((value) {
       print(value);
       if (value != null && value) {
-        UIComm.showInfo("删除成功！");
+//        UIComm.showInfo("删除成功！");
+        delsysn(table.goodsSel);
       }
     });
   }
 
+//修改
   void edit(BuildContext context) {
     if (table.goodsSel.length != 1) {
       UIComm.showError(
           table.goodsSel.length == 0 ? "请选择要修改的商品" : "只能选择一个要修改的商品！");
       return;
     }
-//    var nameController = new TextEditingController(text: "fasdfasd");
-//    var activeController = new TextEditingController(text: "fasdfasd");
-    // nameController.selection(new TextSelection(baseOffset: 0, extentOffset: 4));
     UIComm.goto(context, new SingleGoodPage(table.goodsSel[0])).then((value) {
       if (value != null) {
-        table.notifyListeners();
+        addsysn(value);
       }
     });
   }
 
+//新增
   void add(BuildContext context) {
     UIComm.goto(context, new SingleGoodPage(null)).then((value) {
       if (value != null) {
-        table.goods.insert(0, value);
-        table.notifyListeners();
+        addsysn(value);
       }
     });
+  }
+
+  void addsysn(Good value) async {
+    bool add = value.id == -1 ? true : false;
+    int id = await addGood(value);
+    if (id > 0) {
+      if (add) {
+        value.id = id;
+        table.goods.insert(0, value);
+      }
+      table.notifyListeners();
+    }
+  }
+
+  void delsysn(List<Good> value) async {
+    bool flag = await delGoods(value);
+    if (flag) {
+      UIComm.showInfo("删除成功！");
+      value.forEach((f) => table.goods.remove(f));
+      table.notifyListeners();
+    }
   }
 
   @override
@@ -177,14 +198,28 @@ class GoodsDataSource extends DataTableSource {
   List<Good> goodsSel = [];
 
   loadData() async {
-    goods = await getGoods();
+    final tgoods = await getGoods();
+    goods.addAll(tgoods);
     notifyListeners();
   }
 
   @override
   DataRow getRow(int index) {
     // TODO: implement getRow
+    if (index >= goods.length) {
+      return DataRow.byIndex(
+        cells: [
+          new DataCell(new Text("")),
+          new DataCell(new Text("")),
+          new DataCell(new Text("")),
+        ],
+        index: index,
+//          selected: goods.length == goodsSel.length,
+//          onSelectChanged: (isSelected) {}
+      );
+    }
     var good = goods[index];
+
     return DataRow.byIndex(
         cells: [
           new DataCell(new Text("${good.id}")),
@@ -225,11 +260,15 @@ class GoodsDataSource extends DataTableSource {
 
   // TODO: implement rowCount
   @override
-  int get rowCount => goods.length;
+  int get rowCount => goods.length < 5 ? 5 : goods.length;
 
   // TODO: implement selectedRowCount
   @override
   int get selectedRowCount => goodsSel.length;
+
+  void onSelectChanged(bool checked) {
+    print("onSelectChanged   $checked");
+  }
 
   void selectAll(bool checked) {
     if (checked) {
