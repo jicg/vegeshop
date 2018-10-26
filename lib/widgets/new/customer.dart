@@ -60,29 +60,22 @@ class CustomManagerState extends State<CustomManagerPage> {
     index = index ~/ 2;
     var c = _customers[index];
     return new Slidable(
-      secondaryActions: <Widget>[
-//        IconSlideAction(
-//          caption: '编辑',
-//          color: Colors.greenAccent,
-//          icon: Icons.edit,
-//          onTap: () {
-//            //UIComm.showInfo("编辑 ${c.name}");
-//            edit(context, c);
-//          },
-//        ),
-        IconSlideAction(
-          caption: '删除',
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () {
-            del(context, c);
-            //UIComm.showInfo("删除 ${c.name}");
-          },
-        ),
-      ],
+      secondaryActions: c.issys
+          ? []
+          : <Widget>[
+              IconSlideAction(
+                caption: '删除',
+                color: Colors.red,
+                icon: Icons.delete,
+                onTap: () {
+                  del(context, c);
+                  //UIComm.showInfo("删除 ${c.name}");
+                },
+              ),
+            ],
       child: new ListTile(
         title: new Text("${c.name}"),
-        subtitle: new Text("${c.desc}"),
+        subtitle: c.desc.isEmpty ? null : new Text("${c.desc}"),
         onTap: () {
           edit(context, c);
         },

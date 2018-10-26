@@ -4,8 +4,15 @@ class Customer {
   int id = -1;
   String name;
   String desc;
+  bool issample = false;
+  bool issys = false;
 
-  Customer({this.id = -1, this.name, this.desc = ''});
+  Customer(
+      {this.id = -1,
+      this.name,
+      this.desc = '',
+      this.issample = false,
+      this.issys = false});
 
   @override
   String toString() {
@@ -15,13 +22,27 @@ class Customer {
 
 Future<List<Customer>> getCustomers() async {
   var db = await DBHelper.getDB();
-  List<Map> data = await db.rawQuery("select id,name,remark from customer ");
+  List<Map> data =
+      await db.rawQuery("select id,name,remark,issample,issys from customer ");
   List<Customer> customs = [];
   for (Map m in data) {
-    customs.add(new Customer(name: m["name"], id: m["id"], desc: m["remark"]));
+    customs.add(new Customer(
+        name: m["name"],
+        id: m["id"],
+        desc: m["remark"],
+        issample: (m["issample"] as int == 1),
+        issys: (m["issample"] as int == 1)));
   }
   await db.close();
   return customs;
+}
+
+Future<int> getCustomerTotal() async {
+  var db = await DBHelper.getDB();
+  int cnt =
+      await DBHelper.firstIntValue(db, "select count(1) from customer ", []);
+  db.close();
+  return cnt;
 }
 
 Future<int> saveCustomer(Customer customer) async {
@@ -34,9 +55,15 @@ Future<int> saveCustomer(Customer customer) async {
       await txn.rawUpdate(sql, [customer.name, customer.desc, customer.id]);
     });
   } else {
-    String sql = "INSERT INTO customer(name,remark) VALUES(?,?)";
+    String sql =
+        "INSERT INTO customer(name,remark,issample,issys) VALUES(?,?,?,?)";
     await db.transaction((txn) async {
-      id = await txn.rawInsert(sql, [customer.name, customer.desc]);
+      id = await txn.rawInsert(sql, [
+        customer.name,
+        customer.desc,
+        customer.issample ? 1 : 0,
+        customer.issys ? 1 : 0
+      ]);
     });
   }
   await db.close();

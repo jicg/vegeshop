@@ -18,6 +18,4 @@ class _BluyerPageState extends State<BluyerPage> {
     ));
   }
 
-
-
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vegeshop/model/customer.dart';
 import 'package:vegeshop/widgets/comm/uicomm.dart';
 import 'package:vegeshop/widgets/index/store.dart';
 
 class TomReadPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -30,10 +30,13 @@ class TomPage extends StatefulWidget {
 }
 
 class TomPageState extends State<TomPage> {
-  List<TomBean> _datas = [
-    new TomBean("我的门店"),
-    new TomBean("饭店", desc: "我的店铺旁边的饭店"),
-  ];
+  List<Customer> _datas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,27 +47,37 @@ class TomPageState extends State<TomPage> {
   }
 
   Widget _buildRow(context, index) {
-    final TomBean d = _datas[index];
+    final Customer d = _datas[index];
     return new Card(
       child: new ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
         title: new Text(
-          d.title,
+          d.name,
           style: new TextStyle(fontSize: 18.0),
         ),
-        subtitle: d.desc == null
+        subtitle: d.desc.isEmpty
             ? null
             : new Text(d.desc, style: new TextStyle(fontSize: 14.0)),
         trailing: new Icon(Icons.arrow_right),
         leading: new Icon(Icons.dashboard),
         onTap: () {
-          UIComm.goto(context,new StorePage(readOnly: widget.readOnly,));
+          UIComm.goto(
+              context,
+              new StorePage(
+                readOnly: widget.readOnly,
+              ));
         },
       ),
     );
   }
 
-
+  Future<void> loadData() async {
+    List<Customer> datas = await getCustomers();
+    setState(() {
+      this._datas.clear();
+      this._datas.addAll(datas);
+    });
+  }
 }
 
 class TomBean {

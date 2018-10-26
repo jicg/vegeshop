@@ -15,34 +15,50 @@ class Good {
 }
 
 Future<List<Good>> getGoods() async {
-//  print("start \n");
-//  await new Future.delayed(const Duration(seconds: 1), () => "1");
-//  print("end \n");
-//  return [
-//    new Good(name: "测试001", id: 8, active: true),
-//    new Good(name: "测试002", id: 9, active: true),
-//    new Good(name: "测试003", id: 10, active: true),
-//    new Good(name: "测试004", id: 11, active: true),
-//    new Good(name: "测试005", id: 12, active: true),
-//    new Good(name: "测试006", id: 13, active: true),
-//    new Good(name: "测试007", id: 14, active: true),
-//    new Good(name: "测试008", id: 15, active: true),
-//    new Good(name: "测试00asdfasfasdfasdfasdfasfasfsafasfasdfasdf8", id: 16, active: true),
-//  ];
-  return await DBHelper.getGoods();
+  var db = await DBHelper.getDB();
+  List<Map> data =
+      await db.rawQuery("select id,name,active from good where active = 0");
+  List<Good> goods = [];
+  for (Map m in data) {
+    goods.add(new Good(
+        name: m["name"], id: m["id"], active: m["active"] as int == 0));
+  }
+  await db.close();
+  return goods;
 }
 
-Future<List<Good>> getGoodsByPage(int page) async {
-  return await DBHelper.getGoods();
-}
+//Future<List<Good>> getGoodsByPage(int page) async {
+//  return await DBHelper.getGoods();
+//}
 
 Future<int> addGood(Good good) async {
-  return await DBHelper.addGood(good);
+  var db = await DBHelper.getDB();
+  int id = await DBHelper.firstIntValue(
+      db, "select id from good where id = ?", [good.id]);
+  if (id != null && id > 0) {
+    String sql = "update good set name=?, active=? where id = ?";
+    await db.transaction((txn) async {
+      await txn.rawUpdate(sql, ['${good.name}', '0', '$id']);
+    });
+  } else {
+    String sql = "INSERT INTO good(name,active) VALUES('${good.name}',0)";
+    await db.transaction((txn) async {
+      id = await txn.rawInsert(sql);
+    });
+  }
+  await db.close();
+  return id == null ? -1 : id;
 }
-
 
 Future<bool> delGoods(List<Good> goods) async {
-  return await DBHelper.delGoods(goods);
+  var flag = false;
+  var db = await DBHelper.getDB();
+  await db.transaction((txn) async {
+    for (int i = 0; i < goods.length; i++) {
+      await txn.delete("good", where: "id = ? ", whereArgs: [goods[i].id]);
+    }
+  });
+  await db.close();
+  flag = true;
+  return flag;
 }
-
-

@@ -75,6 +75,7 @@ class SingleCustomerState extends State<SingleCustomerPage> {
                           child: new TextField(
                             controller: _descController,
                             maxLines: 4,
+                           // style: new TextStyle(color: Colors.black,fontSize: 16.0),
                             decoration:
                                 new InputDecoration(border: InputBorder.none),
                           ),

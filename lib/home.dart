@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegeshop/model/customer.dart';
 import 'package:vegeshop/utils/db.dart';
-import 'package:vegeshop/widgets/buyer/buyer.dart';
+//import 'package:vegeshop/widgets/buyer/buyer.dart';
 import 'package:vegeshop/widgets/index/index.dart';
 import 'dart:io';
 import 'package:vegeshop/widgets/new/index.dart';
@@ -48,10 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     try {
-      var db = await DBHelper.getDB();
-      var open = db.isOpen;
-      print("--------home $open----------\n");
-      await db.rawQuery("select 1 from good ");
+      await DBHelper.getDB();
+      int cnt = await getCustomerTotal();
+      if (cnt == 0) {
+        saveCustomer(
+            new Customer(name: "我的小店", desc: "", issys: true, issample: true));
+      }
     } catch (e) {
       print("初始化数据库失败 $e");
     }
@@ -77,8 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           new BottomNavigationBarItem(
               icon: new Icon(Icons.assignment), title: new Text("预购")),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.airplay), title: new Text("结账")),
+//          new BottomNavigationBarItem(
+//              icon: new Icon(Icons.airplay), title: new Text("结账")),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.add), title: new Text("基础")),
         ],
@@ -93,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new IndexedStack(
         children: <Widget>[
           new IndexPage(),
-          new BluyerPage(),
+//          new BluyerPage(),
           new NewPage(),
         ],
         index: _curIndex,
