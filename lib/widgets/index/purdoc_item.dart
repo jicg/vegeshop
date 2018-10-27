@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/model/customer.dart';
+import 'package:vegeshop/model/doccard.dart';
 import 'package:vegeshop/model/good.dart';
 import 'package:vegeshop/model/purdoc.dart';
 import 'package:vegeshop/widgets/comm//uicomm.dart';
@@ -92,26 +93,27 @@ class PurDocItemPageState extends State<PurDocItemPage> {
     }
     return new GoodCell(
         good: _goodsShow[index],
-        onPressed: () => () {
-              if (!editable) {
-                return;
-              }
-              if (_goodsSelected.contains(_goodsShow[index])) {
-                setState(() {
-                  _goodsSelected.remove(_goodsShow[index]);
-                });
-              } else {
-                setState(() {
-                  _goodsSelected.add(_goodsShow[index]);
-                });
-              }
-            },
-        color: _goodsSelected.contains(_goodsShow[index])
-            ? Colors.blue
-            : Colors.white,
-        fontColor: _goodsSelected.contains(_goodsShow[index])
-            ? Colors.white
-            : Colors.black);
+        card: new DocCard(_goodsShow[index]),
+        onPressed: () {
+          if (!editable) {
+            return;
+          }
+          if (_goodsSelected.contains(_goodsShow[index])) {
+            setState(() {
+              _goodsSelected.remove(_goodsShow[index]);
+            });
+          } else {
+            setState(() {
+              _goodsSelected.add(_goodsShow[index]);
+            });
+          }
+        },
+        onCardQtyPressed: () {
+          UIComm.showInfo(_goodsShow[index].toString());
+        },
+        checked: _goodsSelected.contains(
+          _goodsShow[index],
+        ));
   }
 
   @override
@@ -126,7 +128,7 @@ class PurDocItemPageState extends State<PurDocItemPage> {
   }
 
   void loadData() {
-    Future.wait([getGoods()]).then((resps) {
+    Future.wait([getGoods(), getUnit()]).then((resps) {
       if (mounted) {
         setState(() {
           loading = false;
@@ -150,19 +152,20 @@ class PurDocItemPageState extends State<PurDocItemPage> {
 
 class GoodCell extends StatefulWidget {
   final Good good;
-  final Color color;
+  final DocCard card;
   final VoidCallback onPressed;
-  final Color fontColor;
-  final bool simple;
+  final VoidCallback onCardQtyPressed;
+
+  final bool checked;
 
   const GoodCell(
       {Key key,
       this.good,
-      this.color,
+      this.card,
+      this.checked = false,
       this.onPressed,
-      this.fontColor,
-      this.simple = false})
-      : assert(good != null),
+      this.onCardQtyPressed})
+      : assert(good != null || card != null),
         super(key: key);
 
   @override
@@ -176,25 +179,64 @@ class _GoodCellState extends State<GoodCell> {
 
   @override
   Widget build(BuildContext context) {
-    final sw = new Text(
-      widget.good.name,
-      style: new TextStyle(
-          fontSize: 24.0,
-          color: this.widget.fontColor,
-          fontWeight: FontWeight.bold),
-    );
-    final mw = new Text(
-      widget.good.name,
-      style: new TextStyle(
-          fontSize: 24.0,
-          color: this.widget.fontColor,
-          fontWeight: FontWeight.bold),
-    );
+    final sw = this.widget.card != null
+        ? new Container(
+            child: new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text(
+                    widget.card.good.name,
+                    style: new TextStyle(
+                        fontSize: 24.0,
+                        color: widget.checked ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  widget.checked
+                      ? new FlatButton(
+                          onPressed: () {
+                            widget.onCardQtyPressed();
+                          },
+                          child: new Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new Text(
+                                    "${widget.card.qty} ${widget.card.unit}",
+                                    style: new TextStyle(
+                                        color: widget.checked
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  new Container(
+                                      padding: EdgeInsets.only(left: 10.0),
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ))
+                                ],
+                              )),
+                        )
+                      : new Container(),
+                ],
+              ),
+            ),
+          )
+        : new Text(
+            widget.good.name,
+            style: new TextStyle(
+                fontSize: 24.0,
+                color: widget.checked ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold),
+          );
 
     return new FlatButton(
+      color: widget.checked ? Colors.blue : Colors.white,
+      child: sw,
       //alignment: AlignmentDirectional.center,
-      color: widget.color,
-      child: this.widget.simple ? sw : mw,
       onPressed: widget.onPressed,
     );
   }
