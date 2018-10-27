@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:vegeshop/widgets/index/history.dart';
-import 'package:vegeshop/widgets/index/tom.dart';
+import 'package:vegeshop/widgets/index/purdoc_list.dart';
+import 'package:vegeshop/widgets/index/purdoc_last.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class IndexPageState extends State<StatefulWidget> {
           AppBar(
             title: new TabBar(
               tabs: [
-                new Tab(text: "明天"),
+                new Tab(text: "最近预购"),
                 new Tab(
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -28,7 +28,7 @@ class IndexPageState extends State<StatefulWidget> {
                       new Icon(
                         Icons.history,
                       ),
-                      new Text(" 历史"),
+                      new Text(" 预购历史"),
                     ],
                   ),
                 ),
@@ -37,7 +37,7 @@ class IndexPageState extends State<StatefulWidget> {
           ),
           new Expanded(
             flex: 1,
-            child: new TabBarView(children: [new TomPage(), new HistoryPage()]),
+            child: new TabBarView(children: [new PurDocLastPage(), new PurDocListPage()]),
           ),
         ],
       ),

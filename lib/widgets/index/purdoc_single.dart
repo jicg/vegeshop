@@ -1,35 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/model/customer.dart';
+import 'package:vegeshop/model/purdoc.dart';
 import 'package:vegeshop/widgets/comm/uicomm.dart';
-import 'package:vegeshop/widgets/index/store.dart';
+import 'package:vegeshop/widgets/index/purdoc_item.dart';
 
-class TomReadPage extends StatelessWidget {
+class PurDocSinglePage extends StatelessWidget {
+  final bool readOnly;
+  final PurDoc doc;
+
+  const PurDocSinglePage({Key key, this.readOnly, this.doc}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(
-          "sdfasdf",
-        ),
-        automaticallyImplyLeading: true,
-      ),
-      body: new TomPage(readOnly: true),
+          title: doc.id == -1 ? new Text("新增预购") : new Text(doc.name)),
+      body: new PurDocSingleWidget(readOnly: readOnly, doc: doc),
     );
   }
 }
 
-class TomPage extends StatefulWidget {
+class PurDocSingleWidget extends StatefulWidget {
   final bool readOnly;
+  final PurDoc doc;
 
-  TomPage({this.readOnly = false});
+  const PurDocSingleWidget({Key key, this.readOnly, this.doc})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return new TomPageState();
+    return new PurDocSingleState();
   }
 }
 
-class TomPageState extends State<TomPage> {
+class PurDocSingleState extends State<PurDocSingleWidget> {
   List<Customer> _datas = [];
 
   @override
@@ -63,8 +67,10 @@ class TomPageState extends State<TomPage> {
         onTap: () {
           UIComm.goto(
               context,
-              new StorePage(
+              new PurDocItemPage(
                 readOnly: widget.readOnly,
+                doc: this.widget.doc,
+                customer: d,
               ));
         },
       ),
@@ -78,11 +84,4 @@ class TomPageState extends State<TomPage> {
       this._datas.addAll(datas);
     });
   }
-}
-
-class TomBean {
-  String title;
-  String desc;
-
-  TomBean(this.title, {this.desc});
 }

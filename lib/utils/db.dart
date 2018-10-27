@@ -6,22 +6,11 @@ import 'package:sqflite/sqflite.dart';
 //import 'package:permission_handler/permission_handler.dart';
 
 class DBHelper {
-  static const int DBVERSION = 1;
+  static const int DBVERSION = 2;
 
   static const String _PATH = "vegeshop2";
 
   static const String _DBNAME = "vegeshop.db";
-
-  static const List<String> sql_createTables = [
-    'CREATE TABLE good (id INTEGER PRIMARY KEY,name TEXT,active int default 0);',
-    'CREATE TABLE customer (id INTEGER PRIMARY KEY,name TEXT,remark TEXT,issys int default 0,issample int default 0);',
-    'CREATE TABLE purdoc (id INTEGER PRIMARY KEY,name TEXT,remark TEXT, billdate VARCHAR(20));',
-    'CREATE TABLE purdocitem (id INTEGER PRIMARY KEY, good_name TEXT,good_id int ,order_id int,qty FLOAT,unit VARCHAR(80));',
-    'CREATE TABLE doc (id INTEGER PRIMARY KEY, billdate VARCHAR(20));',
-    'CREATE TABLE docitem (id INTEGER PRIMARY KEY, billdate TEXT,good_id int ,order_id int );',
-  ];
-
-  static const initsql = [];
 
   static Future<Database> _createNewDb() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -67,11 +56,30 @@ class DBHelper {
   }
 
   static _upversion(Database db, int version) async {
-    if (version == 1) {
-      for (int i = 0; i < sql_createTables.length; i++) {
-        print(sql_createTables[i]);
-        await db.execute(sql_createTables[i]);
-      }
+    switch (version) {
+      case 1:
+        const List<String> sql_createTables = [
+          'CREATE TABLE good (id INTEGER PRIMARY KEY,name TEXT,active int default 0);',
+          'CREATE TABLE customer (id INTEGER PRIMARY KEY,name TEXT,remark TEXT,issys int default 0,issample int default 0);',
+          'CREATE TABLE purdoc (id INTEGER PRIMARY KEY,name TEXT,remark TEXT, billdate VARCHAR(20));',
+          'CREATE TABLE purdocitem (id INTEGER PRIMARY KEY, good_name TEXT,good_id int ,order_id int,qty FLOAT,unit VARCHAR(80));',
+          'CREATE TABLE doc (id INTEGER PRIMARY KEY, billdate VARCHAR(20));',
+          'CREATE TABLE docitem (id INTEGER PRIMARY KEY, billdate TEXT,good_id int ,order_id int );',
+        ];
+        for (int i = 0; i < sql_createTables.length; i++) {
+          print(sql_createTables[i]);
+          await db.execute(sql_createTables[i]);
+        }
+        break;
+      case 2:
+        await db.execute("alter table purdoc add column udate datetime;");
+        await db.execute("alter table purdoc add column cdate datetime;");
+        await db
+            .execute("alter table purdocitem add column customer_name text;");
+        await db.execute("alter table purdocitem add column customer_id int;");
+        await db.execute(
+            "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
+        break;
     }
   }
 }
