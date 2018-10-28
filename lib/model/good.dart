@@ -63,6 +63,6 @@ Future<bool> delGoods(List<Good> goods) async {
   return flag;
 }
 
-Future<List<String>> getUnit() async {
+Future<List<String>> getUnits() async {
   return ["斤", "个", "包", "贷", "颗"];
 }

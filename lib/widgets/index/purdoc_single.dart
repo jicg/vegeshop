@@ -65,13 +65,16 @@ class PurDocSingleState extends State<PurDocSingleWidget> {
         trailing: new Icon(Icons.arrow_right),
         leading: new Icon(Icons.dashboard),
         onTap: () {
-          UIComm.goto(
+          UIComm.goto<PurDoc>(
               context,
               new PurDocItemPage(
                 readOnly: widget.readOnly,
                 doc: this.widget.doc,
                 customer: d,
-              ));
+              )).then((onValue) {
+            UIComm.showInfo(onValue.toString());
+            //savePurDoc(onValue);
+          });
         },
       ),
     );

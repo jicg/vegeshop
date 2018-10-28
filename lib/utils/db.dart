@@ -29,6 +29,11 @@ class DBHelper {
     if (version == null) {
       version = 0;
     }
+    await db.execute("drop table purdoccustomer");
+    await db.execute(
+        "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, order_id int,customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
+
+
     print("version $version , curversion $DBVERSION");
     if (version != DBVERSION) {
       await _updb(db, version, DBVERSION);
@@ -78,7 +83,7 @@ class DBHelper {
             .execute("alter table purdocitem add column customer_name text;");
         await db.execute("alter table purdocitem add column customer_id int;");
         await db.execute(
-            "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
+            "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, order_id int,customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
         break;
     }
   }
