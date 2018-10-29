@@ -29,9 +29,9 @@ class DBHelper {
     if (version == null) {
       version = 0;
     }
-    await db.execute("drop table purdoccustomer");
-    await db.execute(
-        "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, order_id int,customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
+    //await db.execute("drop table purdoccustomer");
+//    await db.execute(
+//        "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, order_id int,customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
 
 
     print("version $version , curversion $DBVERSION");

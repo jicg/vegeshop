@@ -20,6 +20,7 @@ class ModifyDocCardPage extends StatefulWidget {
 
 class ModifyDocCardState extends State<ModifyDocCardPage> {
   TextEditingController _qtycontroller;
+  final _focusNode = FocusNode();
   String _unit = "斤";
   bool loading = true;
   List<DropdownMenuItem> _dmeans = [
@@ -30,6 +31,12 @@ class ModifyDocCardState extends State<ModifyDocCardPage> {
   void initState() {
     super.initState();
     this._qtycontroller = new TextEditingController(text: "${widget.item.qty}");
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        _qtycontroller.selection = TextSelection(
+            baseOffset: 0, extentOffset: _qtycontroller.value.text.length);
+      }
+    });
     loadData();
   }
 
@@ -79,6 +86,7 @@ class ModifyDocCardState extends State<ModifyDocCardPage> {
                                   autofocus: true,
                                   inputFormatters: [new NumericTextFormatter()],
                                   controller: _qtycontroller,
+                                  focusNode: _focusNode,
                                   decoration: new InputDecoration(
                                       border: InputBorder.none),
                                 ),

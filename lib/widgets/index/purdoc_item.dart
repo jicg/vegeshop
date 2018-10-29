@@ -109,10 +109,16 @@ class PurDocItemPageState extends State<PurDocItemPage> {
           }
           if (_itemsSelected.contains(_itemsShow[index])) {
             setState(() {
+              if (!mounted) {
+                return;
+              }
               _itemsSelected.remove(_itemsShow[index]);
             });
           } else {
             setState(() {
+              if (!mounted) {
+                return;
+              }
               _itemsSelected.add(_itemsShow[index]);
             });
           }
@@ -133,8 +139,10 @@ class PurDocItemPageState extends State<PurDocItemPage> {
         )).then((value) {
       UIComm.showInfo(value.toString());
       setState(() {
-        _itemsShow[index].unit = value.unit;
-        _itemsShow[index].qty = value.qty;
+        if (mounted) {
+          _itemsShow[index].unit = value.unit;
+          _itemsShow[index].qty = value.qty;
+        }
       });
     });
   }
@@ -179,6 +187,9 @@ class PurDocItemPageState extends State<PurDocItemPage> {
     ]).then((resps) {
       if (mounted) {
         setState(() {
+          if (!mounted) {
+            return;
+          }
           editable = !widget.readOnly;
           loading = false;
           if (editable) {

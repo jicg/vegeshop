@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/model/purdoc.dart';
 import 'package:vegeshop/widgets/comm/uicomm.dart';
+import 'package:vegeshop/widgets/index/purdoc_new.dart';
 import 'package:vegeshop/widgets/index/purdoc_single.dart';
 
 class PurDocListPage extends StatefulWidget {
@@ -47,8 +48,9 @@ class _PurDocListPageState extends State<PurDocListPage> {
   }
 
   addPurDoc(BuildContext context) {
-    UIComm.goto(
-        context, new PurDocSinglePage(readOnly: false, doc: new PurDoc()));
+//    UIComm.goto(
+//        context, new PurDocSinglePage(readOnly: false, doc: new PurDoc()));
+  UIComm.goto(context, new PurDocNewPage());
   }
 
   Widget _buildRow(BuildContext context, int index) {
