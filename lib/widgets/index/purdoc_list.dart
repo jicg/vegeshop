@@ -50,7 +50,11 @@ class _PurDocListPageState extends State<PurDocListPage> {
   addPurDoc(BuildContext context) {
 //    UIComm.goto(
 //        context, new PurDocSinglePage(readOnly: false, doc: new PurDoc()));
-  UIComm.goto(context, new PurDocNewPage());
+    UIComm.goto<PurDoc>(context, new PurDocNewPage()).then((v) {
+      if (v != null) {
+        saveDoc(v);
+      }
+    });
   }
 
   Widget _buildRow(BuildContext context, int index) {
@@ -69,8 +73,25 @@ class _PurDocListPageState extends State<PurDocListPage> {
           trailing: new Icon(Icons.arrow_right),
           leading: new Icon(Icons.dashboard),
           onTap: () {
-            UIComm.goto(context, new PurDocSinglePage());
+            UIComm.goto(
+                context,
+                new PurDocSinglePage(
+                  readOnly: false,
+                  doc: _datas[index],
+                ));
           }),
     );
+  }
+
+  void saveDoc(PurDoc v) async {
+    int id = await savePurDoc(v);
+    if (v.id < 0) {
+      v.id = id;
+      setState(() {
+        _datas.add(v);
+      });
+    } else {
+      setState(() {});
+    }
   }
 }

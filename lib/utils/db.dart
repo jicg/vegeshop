@@ -6,13 +6,18 @@ import 'package:sqflite/sqflite.dart';
 //import 'package:permission_handler/permission_handler.dart';
 
 class DBHelper {
-  static const int DBVERSION = 2;
+  static const int DBVERSION = 3;
 
   static const String _PATH = "vegeshop2";
 
   static const String _DBNAME = "vegeshop.db";
 
+  static Database _database;
+
   static Future<Database> _createNewDb() async {
+    if (_database != null && _database.isOpen) {
+      return _database;
+    }
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     try {
       documentsDirectory = await getExternalStorageDirectory();
@@ -20,30 +25,28 @@ class DBHelper {
       documentsDirectory = await getApplicationDocumentsDirectory();
     }
     String path = join(documentsDirectory.path, _PATH, _DBNAME);
-    Database db;
     if (!await new Directory(dirname(path)).exists()) {
       await new Directory(dirname(path)).create(recursive: true);
     }
-    db = await openDatabase(path);
-    int version = await db.getVersion();
+    _database = await openDatabase(path);
+    int version = await _database.getVersion();
     if (version == null) {
       version = 0;
     }
-    //await db.execute("drop table purdoccustomer");
-//    await db.execute(
-//        "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, order_id int,customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
-
-
     print("version $version , curversion $DBVERSION");
     if (version != DBVERSION) {
-      await _updb(db, version, DBVERSION);
-      await db.setVersion(DBVERSION);
+      await _updb(_database, version, DBVERSION);
+      await _database.setVersion(DBVERSION);
     }
-    return db;
+    return _database;
   }
 
   static Future<Database> getDB() async {
     return await _createNewDb();
+  }
+
+  static Future<Database> closeDB() async {
+    return await (await _createNewDb()).close();
   }
 
   static Future<int> firstIntValue(Database db, String sql, List args) async {
@@ -84,6 +87,9 @@ class DBHelper {
         await db.execute("alter table purdocitem add column customer_id int;");
         await db.execute(
             "CREATE TABLE purdoccustomer (id INTEGER PRIMARY KEY, order_id int,customer_name VARCHAR(200), customer_desc VARCHAR(200),customer_id int);");
+        break;
+      case 3:
+        await db.execute("alter table purdoccustomer add column customer_issample int default 0;");
         break;
     }
   }

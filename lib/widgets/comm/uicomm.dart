@@ -12,6 +12,51 @@ class UIComm {
     ]),
   );
 
+  static void showDialogWait(BuildContext context, {String title = ""}) {
+    showDialog<Null>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return new WillPopScope(
+              child: new Center(
+                child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      new Container(
+                          constraints: BoxConstraints(minWidth: 200.0),
+                          color: Colors.white,
+                          child: new Column(
+                            children: <Widget>[
+                              new Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                    vertical: title.isEmpty ? 40.0 : 10.0),
+                                child: new Container(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    child: SpinKitCircle(color: Colors.blue)),
+                              ),
+                              title.isEmpty
+                                  ? new SizedBox()
+                                  : new Container(
+                                      padding: EdgeInsets.only(bottom: 20.0),
+                                      child: Text(
+                                        title,
+                                        style: new TextStyle(
+                                            decoration: TextDecoration.none,
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                            textBaseline: null),
+                                      ),
+                                    )
+                            ],
+                          ))
+                    ]),
+              ),
+              onWillPop: () => new Future.value(false));
+        });
+  }
+
   static Future<T> goto<T extends Object>(BuildContext context, Widget to) {
     return Navigator.of(context).push(new MaterialPageRoute<T>(
       builder: (BuildContext context) {

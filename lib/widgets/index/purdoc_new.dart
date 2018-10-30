@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vegeshop/widgets/comm/uicomm.dart';
+import 'package:vegeshop/model/purdoc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class PurDocNewPage extends StatefulWidget {
-  const PurDocNewPage({Key key}) : super(key: key);
+  final PurDoc doc;
+
+  const PurDocNewPage({Key key, this.doc}) : super(key: key);
 
   @override
   State createState() {
@@ -13,6 +15,19 @@ class PurDocNewPage extends StatefulWidget {
 
 class PurDocNewState extends State<PurDocNewPage> {
   DateTime dateTime = DateTime.now();
+  TextEditingController _ordernoController = new TextEditingController();
+
+  TextEditingController _remarkController = new TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.doc != null) {
+      dateTime = DateTime.parse(widget.doc.billdate);
+      _ordernoController.text = "PU${DateTime.now().millisecondsSinceEpoch}";
+      _remarkController.text = widget.doc.remark;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +59,9 @@ class PurDocNewState extends State<PurDocNewPage> {
                         new Container(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: new Text(
-                              "${dateTime.year}-${dateTime.month}-${dateTime.day}"),
+                            "${dateTime.year}-${dateTime.month}-${dateTime.day}",
+                            style: new TextStyle(fontSize: 18.0),
+                          ),
                         )
                       ],
                     ),
@@ -53,12 +70,15 @@ class PurDocNewState extends State<PurDocNewPage> {
               getCol(
                   "单号",
                   new TextField(
+                    controller: _ordernoController,
                     decoration: new InputDecoration(border: InputBorder.none),
                   )),
               new Divider(),
               getCol(
                   "备注",
                   new TextField(
+                    autofocus: true,
+                    controller: _remarkController,
                     decoration: new InputDecoration(border: InputBorder.none),
                   )),
               new Divider(),
@@ -74,7 +94,15 @@ class PurDocNewState extends State<PurDocNewPage> {
                   ),
                   new RaisedButton(
                     color: Colors.blue,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(
+                        context,
+                        new PurDoc(
+                          id: widget.doc == null ? -1 : widget.doc.id,
+                          billdate:
+                              "${dateTime.year}-${dateTime.month}-${dateTime.day}",
+                          name: _ordernoController.value.text,
+                          remark: _remarkController.value.text,
+                        )),
                     child: new Text(
                       "确定",
                       style: new TextStyle(color: Colors.white),

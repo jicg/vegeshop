@@ -33,7 +33,7 @@ Future<List<Customer>> getCustomers() async {
         issample: (m["issample"] as int == 1),
         issys: (m["issample"] as int == 1)));
   }
-  await db.close();
+//  await db.close();
   return customs;
 }
 
@@ -41,7 +41,7 @@ Future<int> getCustomerTotal() async {
   var db = await DBHelper.getDB();
   int cnt =
       await DBHelper.firstIntValue(db, "select count(1) from customer ", []);
-  db.close();
+//  db.close();
   return cnt;
 }
 
@@ -66,7 +66,7 @@ Future<int> saveCustomer(Customer customer) async {
       ]);
     });
   }
-  await db.close();
+//  await db.close();
   return id == null ? -1 : id;
 }
 
@@ -78,7 +78,7 @@ Future<bool> delCustomers(List<Customer> cs) async {
       await txn.delete("customer", where: "id = ? ", whereArgs: [cs[i].id]);
     }
   });
-  await db.close();
+//  await db.close();
   flag = true;
   return flag;
 }

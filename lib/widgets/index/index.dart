@@ -13,6 +13,7 @@ class IndexPage extends StatefulWidget {
 class IndexPageState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
+//    return new PurDocLastPage();
     return new DefaultTabController(
       length: 2,
       child: new Column(
@@ -37,7 +38,8 @@ class IndexPageState extends State<StatefulWidget> {
           ),
           new Expanded(
             flex: 1,
-            child: new TabBarView(children: [new PurDocLastPage(), new PurDocListPage()]),
+            child: new TabBarView(
+                children: [new PurDocLastPage(), new PurDocListPage()]),
           ),
         ],
       ),

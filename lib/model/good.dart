@@ -23,7 +23,7 @@ Future<List<Good>> getGoods() async {
     goods.add(new Good(
         name: m["name"], id: m["id"], active: m["active"] as int == 0));
   }
-  await db.close();
+//  await db.close();
   return goods;
 }
 
@@ -46,7 +46,7 @@ Future<int> addGood(Good good) async {
       id = await txn.rawInsert(sql);
     });
   }
-  await db.close();
+//  await db.close();
   return id == null ? -1 : id;
 }
 
@@ -58,7 +58,7 @@ Future<bool> delGoods(List<Good> goods) async {
       await txn.delete("good", where: "id = ? ", whereArgs: [goods[i].id]);
     }
   });
-  await db.close();
+//  await db.close();
   flag = true;
   return flag;
 }

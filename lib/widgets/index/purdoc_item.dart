@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vegeshop/model/customer.dart';
-import 'package:vegeshop/model/good.dart';
 import 'package:vegeshop/model/purdoc.dart';
 import 'package:vegeshop/widgets/comm//uicomm.dart';
 import 'package:vegeshop/widgets/index/purdoc_item_modify.dart';
@@ -10,7 +9,7 @@ class PurDocItemPage extends StatefulWidget {
   final PurDoc doc;
   final Customer customer;
 
-  const PurDocItemPage({Key key, this.readOnly, this.doc, this.customer})
+  const PurDocItemPage({Key key, this.readOnly = true, this.doc, this.customer})
       : assert(doc != null),
         assert(customer != null),
         super(key: key);
@@ -22,14 +21,9 @@ class PurDocItemPage extends StatefulWidget {
 }
 
 class PurDocItemPageState extends State<PurDocItemPage> {
-//  List<Good> _goods = [];
-//  List<Good> _goodsShow = [];
-//  List<Good> _goodsSelected = [];
-//  List<PurDocItem> _items = [];
   List<PurDocItem> _itemsShow = [];
   List<PurDocItem> _itemsSelected = [];
 
-//  List<DocCard> _cards = [];
   bool loading = true;
   bool editable = false;
 
@@ -54,43 +48,15 @@ class PurDocItemPageState extends State<PurDocItemPage> {
             automaticallyImplyLeading: true,
             title: new Container(
               child:
-                  new Text("${widget.customer.name}预购${editable ? '-新增' : ''}"),
+                  new Text("${widget.customer.name}预购${editable ? '-修改' : ''}"),
             )),
         body: body,
-//        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-//        floatingActionButton: widget.readOnly
-//            ? null
-//            : new FloatingActionButton(
-////            child: new Icon(Icons.save),
-//                child: new Text(editable ? "完成" : "修改"),
-//                onPressed: () {
-//                  setState(() {
-//                    editable = !editable;
-//                    _goodsShow.clear();
-//                    if (editable) {
-//                      _goodsShow.addAll(_goods);
-//                    } else {
-//                      _goodsShow.addAll(_goodsSelected);
-//                    }
-//                  });
-//                })
         floatingActionButton: widget.readOnly
             ? null
             : new FloatingActionButton(
                 child: new Icon(Icons.save),
                 onPressed: () {
-                  if (editable && _itemsSelected.length > 0) {
-                    this.widget.doc.items.clear();
-                    this.widget.doc.items.addAll(_itemsSelected);
-                    if (!this
-                        .widget
-                        .doc
-                        .customers
-                        .contains(this.widget.customer)) {
-                      this.widget.doc.customers.add(this.widget.customer);
-                    }
-                  }
-                  Navigator.pop(context, this.widget.doc);
+                  Navigator.pop(context, editable ? _itemsSelected : null);
                 }));
 
     return page;
@@ -137,13 +103,15 @@ class PurDocItemPageState extends State<PurDocItemPage> {
         new ModifyDocCardPage(
           item: _itemsShow[index],
         )).then((value) {
-      UIComm.showInfo(value.toString());
-      setState(() {
-        if (mounted) {
+      if(value==null){
+        return ;
+      }
+      if (mounted) {
+        setState(() {
           _itemsShow[index].unit = value.unit;
           _itemsShow[index].qty = value.qty;
-        }
-      });
+        });
+      }
     });
   }
 
@@ -159,20 +127,11 @@ class PurDocItemPageState extends State<PurDocItemPage> {
   }
 
   Future<List<PurDocItem>> loadAllCards() async {
-    List<PurDocItem> itemsShow = [];
     if (!widget.readOnly) {
-      var goods = await getGoods();
-      for (Good good in goods) {
-        itemsShow.add(new PurDocItem(
-            goodId: good.id,
-            goodName: good.name,
-            customerName: widget.customer.name,
-            customerId: widget.customer.id,
-            qty: 0.0,
-            unit: "斤"));
-      }
+      return await getPurDocGoodNotInItemsByDocIDAndCustomer(
+          widget.doc, widget.customer);
     }
-    return itemsShow;
+    return [];
   }
 
   Future<List<PurDocItem>> loadItems() async {
@@ -187,12 +146,10 @@ class PurDocItemPageState extends State<PurDocItemPage> {
     ]).then((resps) {
       if (mounted) {
         setState(() {
-          if (!mounted) {
-            return;
-          }
           editable = !widget.readOnly;
           loading = false;
           if (editable) {
+            _itemsShow.addAll(resps[1]);
             _itemsShow.addAll(resps[0]);
             _itemsSelected.addAll(resps[1]);
           } else {
@@ -203,7 +160,7 @@ class PurDocItemPageState extends State<PurDocItemPage> {
       }
     }).catchError((e) {
       loading = false;
-      print("exception:$e");
+      UIComm.showError("$e");
     });
   }
 }
