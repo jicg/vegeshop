@@ -31,7 +31,7 @@ Future<List<Customer>> getCustomers() async {
         id: m["id"],
         desc: m["remark"],
         issample: (m["issample"] as int == 1),
-        issys: (m["issample"] as int == 1)));
+        issys: (m["issys"] as int == 1)));
   }
 //  await db.close();
   return customs;
@@ -50,9 +50,9 @@ Future<int> saveCustomer(Customer customer) async {
   int id = await DBHelper.firstIntValue(
       db, "select id from customer where id = ?", [customer.id]);
   if (id != null && id > 0) {
-    String sql = "update customer set name=?, remark=? where id = ?";
+    String sql = "update customer set name=?, remark=?,issample=? where id = ?";
     await db.transaction((txn) async {
-      await txn.rawUpdate(sql, [customer.name, customer.desc, customer.id]);
+      await txn.rawUpdate(sql, [customer.name, customer.desc,customer.issample?1:0, customer.id]);
     });
   } else {
     String sql =

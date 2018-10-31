@@ -45,11 +45,15 @@ class PurDocItemPageState extends State<PurDocItemPage> {
 
     final Widget page = new Scaffold(
         appBar: new AppBar(
-            automaticallyImplyLeading: true,
-            title: new Container(
-              child:
-                  new Text("${widget.customer.name}预购${editable ? '-修改' : ''}"),
-            )),
+          automaticallyImplyLeading: true,
+          title: new Container(
+            child:
+                new Text("${widget.customer.name}预购${editable ? '-修改' : ''}"),
+          ),
+          actions: <Widget>[
+            new IconButton(icon: new Icon(Icons.delete), onPressed: remove)
+          ],
+        ),
         body: body,
         floatingActionButton: widget.readOnly
             ? null
@@ -103,8 +107,8 @@ class PurDocItemPageState extends State<PurDocItemPage> {
         new ModifyDocCardPage(
           item: _itemsShow[index],
         )).then((value) {
-      if(value==null){
-        return ;
+      if (value == null) {
+        return;
       }
       if (mounted) {
         setState(() {
@@ -163,6 +167,41 @@ class PurDocItemPageState extends State<PurDocItemPage> {
       UIComm.showError("$e");
     });
   }
+
+  void remove() {
+    if (_itemsSelected.length == 0) {
+      return;
+    }
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: new Text("您确定清空当前已经选择的商品？"),
+            actions: <Widget>[
+              new RaisedButton(
+                onPressed: () => Navigator.pop(context),
+                child: new Text("取消"),
+              ),
+              new RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  UIComm.showDialogWait(context, title: "清除中。。。");
+                  doRemove();
+                },
+                child: new Text("确定"),
+              )
+            ],
+          );
+        });
+  }
+
+  Future<void> doRemove() async {
+    //await delPurDocItemsByDocIDAndCustomer(widget.doc.id, widget.customer.id);
+    setState(() {
+      _itemsSelected.clear();
+    });
+    Navigator.pop(context);
+  }
 }
 
 class ItemCellWidget extends StatefulWidget {
@@ -196,13 +235,32 @@ class _ItemCellWidgetState extends State<ItemCellWidget> {
   @override
   Widget build(BuildContext context) {
     final sw = this.widget.sample
-        ? new Text(
-            widget.item.goodName,
-            style: new TextStyle(
-                fontSize: 24.0,
-                color: widget.checked ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold),
-          )
+        ? new Container(
+            decoration: new BoxDecoration(
+              color: widget.checked ? Colors.green : Colors.white,
+              boxShadow: [
+                new BoxShadow(
+                    color: Colors.black54,
+                    offset: new Offset(4.0, 0.0),
+                    blurRadius: 2.0,
+                    spreadRadius: 1.0),
+              ],
+            ),
+            child: new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  new Text(
+                    widget.item.goodName,
+                    style: new TextStyle(
+                        fontSize: 24.0,
+                        color: widget.checked ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ))
         : new Container(
             padding: EdgeInsets.all(0.0),
             child: new Center(
@@ -211,42 +269,67 @@ class _ItemCellWidgetState extends State<ItemCellWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Expanded(
-                      child: new Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                        new Text(
-                          widget.item.goodName,
-                          style: new TextStyle(
-                              fontSize: 24.0,
-                              color:
-                                  widget.checked ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        new Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: widget.checked
-                              ? new Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Text(
-                                      "${widget.item.qty} ${widget.item.unit}",
-                                      style: new TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
+                      child: new Container(
+                          decoration: new BoxDecoration(
+                            color: widget.checked ? Colors.green : Colors.white,
+                            boxShadow: [
+                              new BoxShadow(
+                                  color: Colors.black54,
+                                  offset: new Offset(4.0, 0.0),
+                                  blurRadius: 2.0,
+                                  spreadRadius: 1.0),
+                            ],
+                          ),
+                          child: new Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                new Text(
+                                  widget.item.goodName,
+                                  style: new TextStyle(
+                                      fontSize: 24.0,
+                                      color: widget.checked
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                new Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: widget.checked
+                                      ? new Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            new Text(
+                                              "${widget.item.qty} ${widget.item.unit}",
+                                              style: new TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )
+                                      : null,
                                 )
-                              : null,
-                        )
-                      ])),
+                              ]))),
                   widget.checked
                       ? new InkWell(
                           onTap: () {
                             widget.onCardQtyPressed();
                           },
                           child: new Container(
-                            color: Colors.red,
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                // shape:new ShapeDecoration(shape: null) ,
+                                boxShadow: [
+                                  new BoxShadow(
+                                      color: Colors.black54,
+                                      offset: new Offset(4.0, 0.0),
+                                      blurRadius: 2.0,
+                                      spreadRadius: 1.0),
+                                ],
+                                border: new Border(
+                                    top:
+                                        new BorderSide(color: Colors.white54))),
                             padding: EdgeInsets.all(8.0),
                             child: new Center(
                               child: new Row(
@@ -257,7 +340,10 @@ class _ItemCellWidgetState extends State<ItemCellWidget> {
                                       Icons.edit,
                                       color: Colors.white,
                                     ),
-                                    new Text("编辑")
+                                    new Text(
+                                      "编辑",
+                                      style: new TextStyle(color: Colors.white),
+                                    )
                                   ]),
                             ),
                           ))
@@ -269,7 +355,7 @@ class _ItemCellWidgetState extends State<ItemCellWidget> {
 
     return new FlatButton(
       padding: EdgeInsets.all(0.0),
-      color: widget.checked ? Colors.blue : Colors.white,
+
       child: sw,
       //alignment: AlignmentDirectional.center,
       onPressed: widget.onPressed,

@@ -121,7 +121,6 @@ class CustomManagerState extends State<CustomManagerPage> {
             ],
           );
         }).then((value) {
-      print(value);
       if (value != null && value) {
 //        UIComm.showInfo("删除成功！");
         delsysn(c);

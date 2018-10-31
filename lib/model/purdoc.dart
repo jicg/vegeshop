@@ -104,7 +104,10 @@ Future<bool> savePurDocCustomer(PurDoc p, Customer c) async {
 Future<List<Customer>> getPurDocCustomers(PurDoc p) async {
   var db = await DBHelper.getDB();
   var sql =
-      "select customer_id,customer_name,customer_desc,customer_issample from purdoccustomer where order_id = ? ";
+      "select customer_id,customer_name,customer_desc,customer_issample  "
+      "from purdoccustomer c "
+      "where order_id = ? "
+      "and exists (select 1 from purdocitem m where c.order_id = m.order_id and m.customer_id = c.customer_id)";
   List<Map> datas = await db.rawQuery(sql, [p.id]);
   List<Customer> cs = [];
   for (Map m in datas) {
@@ -120,7 +123,7 @@ Future<List<Customer>> getPurDocCustomers(PurDoc p) async {
 Future<int> delPurDocCustomer(PurDoc p, Customer c) async {
   var db = await DBHelper.getDB();
   return await db.rawDelete(
-      "deletefrom purdoccustomer where order_id = ? and customer_id = ?",
+      "delete from purdoccustomer where order_id = ? and customer_id = ?",
       [p.id, c.id]);
 }
 

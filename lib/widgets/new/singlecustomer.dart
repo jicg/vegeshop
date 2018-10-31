@@ -16,6 +16,7 @@ class SingleCustomerPage extends StatefulWidget {
 class SingleCustomerState extends State<SingleCustomerPage> {
   TextEditingController _nameController;
   TextEditingController _descController;
+  bool _issample = false;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class SingleCustomerState extends State<SingleCustomerPage> {
     }
     _nameController = new TextEditingController(text: widget.customer.name);
     _descController = new TextEditingController(text: widget.customer.desc);
+    _issample = widget.customer.issample;
   }
 
   @override
@@ -62,6 +64,29 @@ class SingleCustomerState extends State<SingleCustomerPage> {
                 ),
                 new Divider(),
                 new Row(
+                  children: <Widget>[
+                    new Container(
+                      width: 40.0,
+                      child: new Text("类型"),
+                    ),
+                    new Expanded(
+                        flex: 1,
+                        child: new Container(
+                          child: new Row(
+                            children: <Widget>[
+                              new Switch(
+                                value: _issample,
+                                onChanged: (v) => setState(() => _issample = v),
+                              ),
+                              new Text(_issample ? "简单(不记录数量)" : "精准(记录数量)")
+                            ],
+                          ),
+                        )),
+                    //new EditableText()
+                  ],
+                ),
+                new Divider(),
+                new Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new Container(
@@ -75,7 +100,7 @@ class SingleCustomerState extends State<SingleCustomerPage> {
                           child: new TextField(
                             controller: _descController,
                             maxLines: 4,
-                           // style: new TextStyle(color: Colors.black,fontSize: 16.0),
+                            // style: new TextStyle(color: Colors.black,fontSize: 16.0),
                             decoration:
                                 new InputDecoration(border: InputBorder.none),
                           ),
@@ -131,6 +156,7 @@ class SingleCustomerState extends State<SingleCustomerPage> {
   void _save(BuildContext context) {
     widget.customer
       ..id = widget.customer.id == -1 ? -1 : widget.customer.id
+      ..issample = _issample
       ..desc = _descController.value.text
       ..name = _nameController.value.text;
 

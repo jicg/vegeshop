@@ -24,8 +24,10 @@ class PurDocNewState extends State<PurDocNewPage> {
     super.initState();
     if (widget.doc != null) {
       dateTime = DateTime.parse(widget.doc.billdate);
-      _ordernoController.text = "PU${DateTime.now().millisecondsSinceEpoch}";
+      _ordernoController.text = widget.doc.name;
       _remarkController.text = widget.doc.remark;
+    } else {
+      _ordernoController.text = "PU${DateTime.now().millisecondsSinceEpoch}";
     }
   }
 
