@@ -10,10 +10,10 @@
  * 首页显示最近的采购信息
  
 ### 截图
-<center><img src="https://jicg.gitee.io/vegeshoppage/product_x.gif" /></center>
-<center><img src="https://jicg.gitee.io/vegeshoppage/customer_x.gif" /></center>
-<center><img src="https://jicg.gitee.io/vegeshoppage/purdoc_x.gif" /></center>
-<center><img src="https://jicg.gitee.io/vegeshoppage/purdoc2_x.gif" /></center>
+![商品管理](https://jicg.gitee.io/vegeshoppage/product_x.gif)
+![客户管理](https://jicg.gitee.io/vegeshoppage/customer_x.gif)
+![新增预购](https://jicg.gitee.io/vegeshoppage/purdoc_x.gif)
+![删除预购](https://jicg.gitee.io/vegeshoppage/purdoc2_x.gif)
  
 ### 未完成
  * 结算功能
