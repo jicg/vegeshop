@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vegeshop/model/purdoc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
@@ -61,7 +62,7 @@ class PurDocNewState extends State<PurDocNewPage> {
                         new Container(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: new Text(
-                            "${dateTime.year}-${dateTime.month}-${dateTime.day}",
+                            new DateFormat('yyyy-MM-dd').format(dateTime),
                             style: new TextStyle(fontSize: 18.0),
                           ),
                         )
@@ -101,7 +102,7 @@ class PurDocNewState extends State<PurDocNewPage> {
                         new PurDoc(
                           id: widget.doc == null ? -1 : widget.doc.id,
                           billdate:
-                              "${dateTime.year}-${dateTime.month}-${dateTime.day}",
+                              new DateFormat('yyyy-MM-dd').format(dateTime),
                           name: _ordernoController.value.text,
                           remark: _remarkController.value.text,
                         )),

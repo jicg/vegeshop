@@ -9,6 +9,12 @@
  * 选择采购明细
  * 首页显示最近的采购信息
  
+### 截图
+<center><img src="https://jicg.gitee.io/vegeshoppage/product_x.gif" /></center>
+<center><img src="https://jicg.gitee.io/vegeshoppage/customer_x.gif" /></center>
+<center><img src="https://jicg.gitee.io/vegeshoppage/purdoc_x.gif" /></center>
+<center><img src="https://jicg.gitee.io/vegeshoppage/purdoc2_x.gif" /></center>
+ 
 ### 未完成
  * 结算功能
  

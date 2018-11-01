@@ -175,7 +175,7 @@ class PurDocLastPageState extends State<PurDocLastPage> {
 
   Future<void> loadData() async {
     var doc = await getLastPurDoc();
-    var customers = await getPurDocCustomers(doc);
+    List<Customer> customers = (doc == null ? [] : await getPurDocCustomers(doc));
     if (mounted) {
       setState(() {
         _doc = doc;
@@ -255,9 +255,9 @@ class _PurDocItemWidgetState extends State<PurDocItemWidget> {
         widget.doc.id, widget.customer.id);
     if (mounted) {
       setState(() {
+        _loading = false;
         _items.clear();
         _items.addAll(items);
-        _loading = false;
       });
     }
   }

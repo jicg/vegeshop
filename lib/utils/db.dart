@@ -75,7 +75,6 @@ class DBHelper {
           'CREATE TABLE docitem (id INTEGER PRIMARY KEY, billdate TEXT,good_id int ,order_id int );',
         ];
         for (int i = 0; i < sql_createTables.length; i++) {
-          print(sql_createTables[i]);
           await db.execute(sql_createTables[i]);
         }
         break;
